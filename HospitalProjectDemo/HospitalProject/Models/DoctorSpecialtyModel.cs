@@ -7,10 +7,10 @@ namespace HospitalProject.Models
         [Required]
         public int EspecialidadID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El Campo no puede estar vacio")]
         public string NombreEspecialidad { get; set;}
 
-        [Required]
+        [Required(ErrorMessage = "El Campo no puede estar vacio")]
         public string DescripcionEspecialidad { get; set;}
     }
 }

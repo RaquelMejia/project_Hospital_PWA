@@ -9,7 +9,7 @@ namespace HospitalProject.Models
         [Required]
         public int HabitacionID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El Campo no puede estar vacio")]
         public string NumeroHabitacion { get; set; }
     }
 }

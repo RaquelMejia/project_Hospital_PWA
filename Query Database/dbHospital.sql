@@ -43,9 +43,9 @@ go
 CREATE TABLE Doctores(
 DoctorID int primary key identity(1,1),
 NombreCompleto varchar(50),
-EspecialidadID int foreign key references EspecialidadDoctor (EspecialidadID),
 Dui varchar(10),
-Contacto varchar(50)
+Contacto varchar(50),
+EspecialidadID int foreign key references EspecialidadDoctor (EspecialidadID)
 )
 go
 
@@ -260,10 +260,10 @@ END
 GO
 
 -- select
-CREATE PROCEDURE sp_select_especialidadDoctor
+CREATE OR ALTER PROCEDURE sp_select_especialidadDoctor
 AS
 BEGIN
-    SELECT * FROM EspecialidadDoctor
+    SELECT EspecialidadID, NombreEspecialidad, DescripcionEspecialidad FROM EspecialidadDoctor
 END
 GO
 
@@ -322,10 +322,12 @@ END
 go
 
 --select
-CREATE PROCEDURE sp_select_registroHabitaciones
+CREATE OR ALTER PROCEDURE sp_select_registroHabitaciones
 AS
 BEGIN
-    SELECT * FROM RegistroHabitaciones
+    SELECT RegistroHabitaciones.RegistroHabitacionID, Habitaciones.NumeroHabitacion, Pacientes.NombreCompleto FROM RegistroHabitaciones
+	INNER JOIN Habitaciones ON RegistroHabitaciones.HabitacionID = Habitaciones.HabitacionID
+	INNER JOIN Pacientes ON RegistroHabitaciones.PacienteID = Pacientes.PacienteID
 END
 go
 
@@ -371,25 +373,26 @@ GO
 ---- Doctor
 
 -- insert
-CREATE PROCEDURE sp_insertar_doctor
+CREATE OR ALTER PROCEDURE sp_insert_doctor
 (
 @NombreCompleto varchar(50),
-@EspecialidadID int,
 @Dui varchar(10),
-@Contacto varchar(50)
+@Contacto varchar(50),
+@EspecialidadID int
 )
 AS
 BEGIN
     INSERT INTO Doctores
-    VALUES (@NombreCompleto, @EspecialidadID, @Dui, @Contacto)
+    VALUES (@NombreCompleto, @Dui, @Contacto, @EspecialidadID)
 END
 go
 
 -- select
-CREATE PROCEDURE sp_select_doctor
+CREATE OR ALTER PROCEDURE sp_select_doctor
 AS
 BEGIN
-    SELECT * FROM Doctores
+    SELECT Doctores.DoctorID, Doctores.NombreCompleto, Doctores.Dui, Doctores.Contacto, EspecialidadDoctor.NombreEspecialidad FROM Doctores
+	INNER JOIN EspecialidadDoctor ON Doctores.EspecialidadID = EspecialidadDoctor.EspecialidadID
 END
 GO
 
@@ -503,7 +506,7 @@ END
 -- pruebas --
 
 /*
-execute sp_insert_paciente 'Williams ortiz', 22, '0000000-0','2134-4567'
+execute sp_insert_paciente 'Josue Montoya', 22, '2525252-8','2134-4567'
 execute sp_select_paciente
 execute sp_select_byId_paciente 1
 execute sp_update_paciente 1, 'Williams Ortiz', 22, '0000000-0','2134-4567'
@@ -511,7 +514,7 @@ execute sp_delete_paciente 1
 */
 
 /*
-execute sp_insert_Habitacion 'A3'
+execute sp_insert_Habitacion 'A213'
 execute sp_select_habitaciones
 execute sp_select_byId_habitaciones 1
 execute sp_update_habitaciones 1, 'A-1'
@@ -535,15 +538,15 @@ execute sp_delete_especialidadDoctor 1
 */
 
 /*
-execute sp_insert_registroHabitaciones 2,1
+execute sp_insert_registroHabitaciones 3,3
 execute sp_select_registroHabitaciones
-execute sp_select_byId_registroHabitaciones 1
+execute sp_select_byId_registroHabitaciones 2
 execute sp_update_registroHabitaciones 1, 3, 2
 execute sp_delete_registroHabitaciones 1
 */
 
 /*
-execute sp_insertar_doctor 'Ariel Chavez', 2, '1111111-1', '1234-9876'
+execute sp_insert_doctor 'Carlos Molina', '1121354-1', '9874-5481', 1
 execute sp_select_doctor
 execute sp_select_byId_doctor 2
 execute sp_update_doctor 2, 'Cristian Chavez', 2, '1111111-1', '1234-9876'

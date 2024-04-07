@@ -102,14 +102,18 @@ namespace HospitalProject.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var university = _doctorRepository.GetById(id);
+            var doctor = _doctorRepository.GetById(id);
 
-            if (university == null)
+            if (doctor == null)
             {
                 return NotFound();
             }
 
-            return View(university);
+            var specialty = _doctorRepository.GetAllSpecialty();
+
+            doctor.Especialidades = specialty.FirstOrDefault(r => r.EspecialidadID == doctor.EspecialidadID);
+
+            return View(doctor);
         }
 
         // POST: UniverstiyController/Delete/5

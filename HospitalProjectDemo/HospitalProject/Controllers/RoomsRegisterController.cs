@@ -122,6 +122,12 @@ namespace HospitalProject.Controllers
                 return NotFound();
             }
 
+            var rooms = _roomsRegistersRepository.GetAllRooms();
+            var pacient = _roomsRegistersRepository.GetAllPatients();
+
+            room.NumeroHabitacion = rooms.FirstOrDefault(r => r.HabitacionID == room.HabitacionID);
+            room.NombrePaciente = pacient.FirstOrDefault(p => p.PacienteID == room.PacienteID);
+
             return View(room);
         }
 
@@ -140,7 +146,6 @@ namespace HospitalProject.Controllers
             }
             catch (Exception ex)
             {
-
                 return View(roomsRegistrationsModel);
             }
         }

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<HospitalProject.Models.PatientsModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Nuevo Paciente</a>
+</p>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-primary" role="alert">
+        @TempData["message"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PacienteID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCompleto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Edad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dui)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contacto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PacienteID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreCompleto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Edad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dui)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contacto)
+            </td>
+            <td>
+                <a asp-controller="Patient" asp-action="Edit" asp-route-id="@item.PacienteID" class="btn btn-primary">Editar</a>
+                <a asp-controller="Patient" asp-action="Delete" asp-route-id="@item.PacienteID" class="btn btn-primary">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

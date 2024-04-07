@@ -1,0 +1,48 @@
+﻿@model IEnumerable<HospitalProject.Models.RoomsModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Nueva Habitacion</a>
+</p>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-primary" role="alert">
+        @TempData["message"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.HabitacionID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroHabitacion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HabitacionID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroHabitacion)
+            </td>
+            <td>
+                <a asp-controller="Room" asp-action="Edit" asp-route-id="@item.HabitacionID" class="btn btn-primary">Editar</a>
+                <a asp-controller="Room" asp-action="Delete" asp-route-id="@item.HabitacionID" class="btn btn-primary">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

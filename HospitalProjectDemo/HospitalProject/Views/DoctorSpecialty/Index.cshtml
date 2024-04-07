@@ -1,0 +1,54 @@
+﻿@model IEnumerable<HospitalProject.Models.DoctorSpecialtyModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-controller="DoctorSpecialty">Nueva Especialidad</a>
+</p>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-primary" role="alert">
+        @TempData["message"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EspecialidadID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreEspecialidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescripcionEspecialidad)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EspecialidadID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreEspecialidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DescripcionEspecialidad)
+            </td>
+            <td>
+                <a asp-controller="DoctorSpecialty" asp-action="Edit" asp-route-id="@item.EspecialidadID" class="btn btn-primary">Editar</a>
+                <a asp-controller="DoctorSpecialty" asp-action="Delete" asp-route-id="@item.EspecialidadID" class="btn btn-primary">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

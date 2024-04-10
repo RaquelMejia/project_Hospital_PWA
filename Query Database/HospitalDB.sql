@@ -51,11 +51,11 @@ go
 
 CREATE TABLE Consultas(
 ConsultaID int primary key identity(1,1),
+FechaConsulta datetime,
+Diagnostico varchar(255),
 PacienteID int foreign key references Pacientes (PacienteID),
 DoctorID int foreign key references Doctores (DoctorID),
-Diagnostico varchar(255),
-MedicamentoID int foreign key references Medicamentos (MedicamentoID),
-FechaConsulta datetime
+MedicamentoID int foreign key references Medicamentos (MedicamentoID)
 )
 go
 
@@ -260,7 +260,7 @@ END
 GO
 
 -- select
-CREATE OR ALTER PROCEDURE sp_select_especialidadDoctor
+CREATE PROCEDURE sp_select_especialidadDoctor
 AS
 BEGIN
     SELECT EspecialidadID, NombreEspecialidad, DescripcionEspecialidad FROM EspecialidadDoctor
@@ -322,7 +322,7 @@ END
 go
 
 --select
-CREATE OR ALTER PROCEDURE sp_select_registroHabitaciones
+CREATE PROCEDURE sp_select_registroHabitaciones
 AS
 BEGIN
     SELECT RegistroHabitaciones.RegistroHabitacionID, Habitaciones.NumeroHabitacion, Pacientes.NombreCompleto FROM RegistroHabitaciones
@@ -373,7 +373,7 @@ GO
 ---- Doctor
 
 -- insert
-CREATE OR ALTER PROCEDURE sp_insert_doctor
+CREATE PROCEDURE sp_insert_doctor
 (
 @NombreCompleto varchar(50),
 @Dui varchar(10),
@@ -388,7 +388,7 @@ END
 go
 
 -- select
-CREATE OR ALTER PROCEDURE sp_select_doctor
+CREATE PROCEDURE sp_select_doctor
 AS
 BEGIN
     SELECT Doctores.DoctorID, Doctores.NombreCompleto, Doctores.Dui, Doctores.Contacto, EspecialidadDoctor.NombreEspecialidad FROM Doctores
@@ -442,24 +442,28 @@ GO
 -- insert
 CREATE PROCEDURE sp_insert_consulta
 (
+@FechaConsulta datetime,
+@Diagnostico varchar(255),
 @PacienteID int,
 @DoctorID int,
-@Diagnostico varchar(255),
-@MedicamentoID int,
-@FechaConsulta datetime
+@MedicamentoID int
 )
 AS
 BEGIN
     INSERT INTO Consultas
-    VALUES (@PacienteID, @DoctorID, @Diagnostico, @MedicamentoID, @FechaConsulta)
+    VALUES (@FechaConsulta, @Diagnostico, @PacienteID, @DoctorID,  @MedicamentoID)
 END
 go
 
 -- select
-CREATE PROCEDURE sp_select_consulta
+CREATE or ALTER PROCEDURE sp_select_consulta
 AS
 BEGIN
-    SELECT * FROM Consultas
+    SELECT con.ConsultaID, con.FechaConsulta,con.Diagnostico, pa.NombreCompleto , doc.NombreCompleto, med.Nombre 
+	FROM Consultas con
+	INNER JOIN Pacientes pa ON con.PacienteID = pa.PacienteID
+	INNER JOIN Doctores doc ON con.DoctorID = doc.DoctorID
+	INNER JOIN Medicamentos med ON con.MedicamentoID = med.MedicamentoID
 END
 go
 
@@ -478,16 +482,16 @@ go
 CREATE PROCEDURE sp_update_consulta
 (
 @ConsultaID int,
+@FechaConsulta datetime,
+@Diagnostico varchar(255),
 @PacienteID int,
 @DoctorID int,
-@Diagnostico varchar(255),
-@MedicamentoID int,
-@FechaConsulta datetime
+@MedicamentoID int
 )
 AS
 BEGIN
     UPDATE Consultas
-    SET PacienteID = @PacienteID, DoctorID = @DoctorID, Diagnostico = @Diagnostico, MedicamentoID = @MedicamentoID, FechaConsulta = @FechaConsulta
+    SET FechaConsulta = @FechaConsulta, Diagnostico = @Diagnostico, PacienteID = @PacienteID, DoctorID = @DoctorID, MedicamentoID = @MedicamentoID
     WHERE ConsultaID = @ConsultaID
 END
 GO
@@ -538,25 +542,25 @@ execute sp_delete_especialidadDoctor 1
 */
 
 /*
-execute sp_insert_registroHabitaciones 3,3
+execute sp_insert_registroHabitaciones 1, 1
 execute sp_select_registroHabitaciones
-execute sp_select_byId_registroHabitaciones 2
-execute sp_update_registroHabitaciones 1, 3, 2
+execute sp_select_byId_registroHabitaciones 1
+execute sp_update_registroHabitaciones 1, 2, 1
 execute sp_delete_registroHabitaciones 1
 */
 
 /*
 execute sp_insert_doctor 'Carlos Molina', '1121354-1', '9874-5481', 1
 execute sp_select_doctor
-execute sp_select_byId_doctor 2
-execute sp_update_doctor 2, 'Cristian Chavez', 2, '1111111-1', '1234-9876'
-execute sp_delete_doctor 2
+execute sp_select_byId_doctor 1
+execute sp_update_doctor 1, 'Cristian Chavez', 1, '1111111-1', '1234-9876'
+execute sp_delete_doctor 1
 */
 
 /*
-execute sp_insert_consulta 1, 3, 'jajaja', 3, '12-12-2023';
+execute sp_insert_consulta '12-12-2023', 'jajaja', 1, 1, 1
 execute sp_select_consulta
-execute sp_select_byId_consulta 2
-execute sp_update_consulta 1, 1, 3, 'modificate', 3, '12-12-2023';
+execute sp_select_byId_consulta 1
+execute sp_update_consulta 1, '12-12-2023', 'modificate', 1, 1, 1
 execute sp_delete_consulta 1
 */

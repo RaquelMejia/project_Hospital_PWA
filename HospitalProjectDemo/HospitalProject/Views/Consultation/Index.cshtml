@@ -1,0 +1,113 @@
+﻿@model IEnumerable<HospitalProject.Models.ConsultationsModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Nueva Consulta</a>
+</p>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-primary" role="alert">
+        @TempData["message"]
+    </div>
+}
+
+<table class="table table-bordered table-striped table-responsive" id="consultationsTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ConsultaID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PacienteID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MedicamentoID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Diagnostico)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaConsulta)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConsultaID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PacienteID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DoctorID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MedicamentoID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Diagnostico)
+                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaConsulta)
+                </th>
+                <td>
+                    <a asp-controller="Consultation" asp-action="Edit" asp-route-id="@item.ConsultaID" class="btn btn-primary">Editar</a>
+                    <a asp-controller="Consultation" asp-action="Delete" asp-route-id="@item.ConsultaID" class="btn btn-primary">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#patientsTable").DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                ],
+                columnDefs: [
+                    {
+                        targets: 5,
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+                }
+            });
+        });
+    </script>
+}
